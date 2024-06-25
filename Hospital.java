@@ -11,25 +11,30 @@ public class Hospital {
     private List<Medico> medicos;
     private List<Consulta> consultas;
 
+    // Construtor
     public Hospital() {
         this.pacientes = new ArrayList<>();
         this.medicos = new ArrayList<>();
         this.consultas = new ArrayList<>();
     }
 
+    // Adiciona um paciente à lista de pacientes
     public void adicionarPaciente(Paciente paciente) {
         pacientes.add(paciente);
     }
 
+    // Adiciona um médico à lista de médicos
     public void adicionarMedico(Medico medico) {
         medicos.add(medico);
     }
 
+    // Marca uma consulta e adiciona à lista de consultas
     public void marcarConsulta(Consulta consulta) {
         consultas.add(consulta);
         consulta.getMedico().adicionarConsulta(consulta);
     }
 
+    // Busca consultas por paciente
     public List<Consulta> buscarConsultasPorPaciente(Paciente paciente) {
         List<Consulta> consultasDoPaciente = new ArrayList<>();
         for (Consulta consulta : consultas) {
@@ -40,28 +45,33 @@ public class Hospital {
         return consultasDoPaciente;
     }
 
+    // Lista todas as consultas
     public List<Consulta> getConsultas() {
         return consultas;
     }
 
+    // Lista todos os pacientes
     public void listarPacientes() {
         for (Paciente paciente : pacientes) {
             System.out.println(paciente);
         }
     }
 
+    // Lista todos os médicos
     public void listarMedicos() {
         for (Medico medico : medicos) {
             System.out.println(medico);
         }
     }
 
+    // Lista todas as consultas
     public void listarConsultas() {
         for (Consulta consulta : consultas) {
             System.out.println(consulta);
         }
     }
 
+    // Lista a agenda de um médico específico
     public void listarAgendaMedico(String crm) {
         Medico medico = null;
         for (Medico m : medicos) {
@@ -77,6 +87,7 @@ public class Hospital {
         }
     }
 
+    // Método principal para rodar o sistema
     public static void main(String[] args) {
         Hospital hospital = new Hospital();
         Scanner scanner = new Scanner(System.in);
@@ -90,7 +101,8 @@ public class Hospital {
             System.out.println("5. Listar Médicos");
             System.out.println("6. Listar Consultas");
             System.out.println("7. Listar Agenda do Médico");
-            System.out.println("8. Sair");
+            System.out.println("8. Buscar Consultas por Paciente");
+            System.out.println("9. Sair");
             System.out.print("Escolha uma opção: ");
 
             int opcao = scanner.nextInt();
@@ -211,6 +223,30 @@ public class Hospital {
                     hospital.listarAgendaMedico(crmAgenda);
                     break;
                 case 8:
+                    System.out.print("CPF do Paciente (xxx.xxx.xxx-xx): ");
+                    String cpfBusca = scanner.nextLine();
+                    Paciente pacienteBusca = null;
+                    for (Paciente p : hospital.pacientes) {
+                        if (p.getCpf().equals(cpfBusca)) {
+                            pacienteBusca = p;
+                            break;
+                        }
+                    }
+                    if (pacienteBusca != null) {
+                        List<Consulta> consultasDoPaciente = hospital.buscarConsultasPorPaciente(pacienteBusca);
+                        if (!consultasDoPaciente.isEmpty()) {
+                            System.out.println("Consultas do Paciente:");
+                            for (Consulta consulta : consultasDoPaciente) {
+                                System.out.println(consulta);
+                            }
+                        } else {
+                            System.out.println("Nenhuma consulta encontrada para este paciente.");
+                        }
+                    } else {
+                        System.out.println("Paciente não encontrado!");
+                    }
+                    break;
+                case 9:
                     System.out.println("Encerrando o programa...");
                     return;
                 default:
